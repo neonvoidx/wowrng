@@ -23,7 +23,9 @@ Built with TypeScript + Vite. Static output, hosted on GitHub Pages.
   hunters, Bloodlust for shamans), their exact battle rez (Rebirth for druids,
   Raise Ally for death knights), their class raid buff (per Midnight 12.x —
   Chaos Brand, Arcane Intellect, Hunter's Mark, Skyfury, …), and notable utility
-  (Death Grip; Demonic Gateway + Soulstone for the buff-less classes)
+  (Death Grip; Demonic Gateway + Soulstone for the buff-less classes). Every
+  Brings entry links to its Wowhead spell page and shows an official Wowhead
+  tooltip on hover (via the zamimg widgets script; degrades gracefully offline)
 - Toggleable rules:
   - **No duplicate specializations** (on by default) — no two players get the same class/spec
   - **No duplicate classes** (off by default) — every player gets a different class

@@ -182,6 +182,23 @@ input[type='text']:focus {
   font-size: 0.8rem;
 }
 
+/* Narrow screens (phones): drop the spec picker to its own full-width row so
+   nothing gets clipped or forces sideways scrolling. */
+@media (max-width: 620px) {
+  #players li {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 0.45rem 0.6rem;
+    align-items: center;
+  }
+
+  #players .otp-select {
+    grid-column: 1 / -1;
+    width: 100%;
+    max-width: none;
+  }
+}
+
 .option {
   display: flex;
   align-items: center;
@@ -347,8 +364,33 @@ button:active {
 
 .summary {
   text-align: center;
-  color: var(--muted);
-  margin: 0 0 1rem;
+  color: #f87171;
+  margin: 1.4rem 0 1rem;
+  min-height: 1em;
+}
+
+.summary:empty {
+  display: none;
+}
+
+/* Each message renders as its own line with a red bullet. */
+.summary-line {
+  display: block;
+}
+
+.summary-line + .summary-line {
+  margin-top: 0.35rem;
+}
+
+.summary-line::before {
+  content: '•';
+  color: #ef4444;
+  font-weight: 700;
+  margin-right: 0.5rem;
+}
+
+.summary.warning {
+  color: #fbbf24;
 }
 
 .card-grid {
@@ -419,6 +461,36 @@ button:active {
   font-size: 0.95rem;
   z-index: 1;
   filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.55));
+}
+
+.brings-list a {
+  color: inherit;
+  text-decoration: none;
+  /* The anchor wraps icon + name, so it needs the row's flex layout itself
+     (the li's gap only applies to its direct children). */
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.spec-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.55rem;
+}
+
+.spec-actions[hidden] {
+  display: none;
+}
+
+.spec-actions .mini-btn {
+  width: auto;
+  flex: 1;
+  padding: 0.35rem 0.6rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  border-radius: 8px;
+  box-shadow: none;
 }
 
 .spec-icon {

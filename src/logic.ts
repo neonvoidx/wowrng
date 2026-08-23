@@ -136,7 +136,7 @@ export function assignGroup(
   };
 
   const drawFrom = (pool: Spec[], what: string): Spec => {
-    if (pool.length === 0) throw new Error(`No specs available for ${what}`);
+    if (pool.length === 0) throw new Error(`Not enough ${what} specs selected`);
     const chosen = pick(pool, rng);
     reserve(chosen);
     return chosen;
@@ -152,10 +152,11 @@ export function assignGroup(
   while (dpsRequirements.length < 3) dpsRequirements.push(null);
 
   let dpsIndex = 0;
-  const drawForRole = (role: Role): Spec =>
-    role === 'DPS'
-      ? drawFrom(candidates('DPS', false, undefined, dpsRequirements[dpsIndex++]), `role ${role}`)
-      : drawFrom(candidates(role, false), `role ${role}`);
+  const drawForRole = (role: Role): Spec => {
+    if (role !== 'DPS') return drawFrom(candidates(role, false), role);
+    const req = dpsRequirements[dpsIndex++];
+    return drawFrom(candidates('DPS', false, undefined, req), req ? `${req.toLowerCase()} DPS` : 'DPS');
+  };
 
   const names = normalizeNames(playerNames);
 

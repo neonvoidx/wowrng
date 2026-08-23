@@ -26,7 +26,7 @@
                 <input class="player-name" type="text" maxlength="24" placeholder="Player 1" autocomplete="off" />
                 <label class="otp" title="One trick pony — always plays one spec">
                   <input type="checkbox" class="otp-toggle" />
-                  <span>OTP</span>
+                  <span>One trick pony</span>
                 </label>
                 <select class="otp-select" hidden aria-label="One trick spec for player 1"></select>
               </li>
@@ -34,7 +34,7 @@
                 <input class="player-name" type="text" maxlength="24" placeholder="Player 2" autocomplete="off" />
                 <label class="otp" title="One trick pony — always plays one spec">
                   <input type="checkbox" class="otp-toggle" />
-                  <span>OTP</span>
+                  <span>One trick pony</span>
                 </label>
                 <select class="otp-select" hidden aria-label="One trick spec for player 2"></select>
               </li>
@@ -42,7 +42,7 @@
                 <input class="player-name" type="text" maxlength="24" placeholder="Player 3" autocomplete="off" />
                 <label class="otp" title="One trick pony — always plays one spec">
                   <input type="checkbox" class="otp-toggle" />
-                  <span>OTP</span>
+                  <span>One trick pony</span>
                 </label>
                 <select class="otp-select" hidden aria-label="One trick spec for player 3"></select>
               </li>
@@ -50,7 +50,7 @@
                 <input class="player-name" type="text" maxlength="24" placeholder="Player 4" autocomplete="off" />
                 <label class="otp" title="One trick pony — always plays one spec">
                   <input type="checkbox" class="otp-toggle" />
-                  <span>OTP</span>
+                  <span>One trick pony</span>
                 </label>
                 <select class="otp-select" hidden aria-label="One trick spec for player 4"></select>
               </li>
@@ -58,7 +58,7 @@
                 <input class="player-name" type="text" maxlength="24" placeholder="Player 5" autocomplete="off" />
                 <label class="otp" title="One trick pony — always plays one spec">
                   <input type="checkbox" class="otp-toggle" />
-                  <span>OTP</span>
+                  <span>One trick pony</span>
                 </label>
                 <select class="otp-select" hidden aria-label="One trick spec for player 5"></select>
               </li>
@@ -93,6 +93,10 @@
                 <input type="checkbox" id="opt-limit-specs" />
                 <span>Limit specializations</span>
               </label>
+              <div class="spec-actions" hidden>
+                <button type="button" class="mini-btn" id="spec-all">Check all</button>
+                <button type="button" class="mini-btn" id="spec-none">Uncheck all</button>
+              </div>
               <div id="spec-list" hidden></div>
             </div>
 
@@ -123,6 +127,8 @@
           </section>
         </form>
 
+        <p id="summary" class="summary" role="alert"></p>
+
         <section id="results" hidden>
           <div class="section-divider" aria-hidden="true">
             <span class="divider-line"></span>
@@ -130,7 +136,6 @@
             <span class="divider-line"></span>
           </div>
           <h2>Your Group</h2>
-          <p id="summary" class="summary"></p>
           <div id="cards" class="card-grid"></div>
         </section>
       </main>
@@ -150,6 +155,7 @@
         </a>
       </footer>
     </div>
+    <script src="https://wow.zamimg.com/widgets/power.js" defer></script>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

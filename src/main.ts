@@ -4,6 +4,7 @@ import { assignGroup, type Assignment, type Options, type Spec } from './logic';
 interface BuffInfo {
   name: string;
   blizzIcon: string;
+  spellId?: number;
 }
 
 interface SpecsFile {
@@ -56,6 +57,9 @@ const maxOneAugInput = document.querySelector<HTMLInputElement>('#opt-max-one-au
 const mustBattleRezInput = document.querySelector<HTMLInputElement>('#opt-must-battle-rez')!;
 const limitSpecsInput = document.querySelector<HTMLInputElement>('#opt-limit-specs')!;
 const specListEl = document.querySelector<HTMLDivElement>('#spec-list')!;
+const specAllButton = document.querySelector<HTMLButtonElement>('#spec-all')!;
+const specNoneButton = document.querySelector<HTMLButtonElement>('#spec-none')!;
+const specActionsEl = document.querySelector<HTMLDivElement>('.spec-actions')!;
 const setMeleeInput = document.querySelector<HTMLInputElement>('#opt-set-melee')!;
 const rangeMeleeInput = document.querySelector<HTMLInputElement>('#range-melee')!;
 const outMeleeEl = document.querySelector<HTMLOutputElement>('#out-melee')!;
@@ -129,10 +133,14 @@ function renderCard(assignment: Assignment, index: number, locked: boolean): str
       ? `<span class="badge brez" title="${escapeHtml(buffCatalog[spec.selfRezSpell]?.name ?? 'Reincarnation')}: return to life after death"><img src="${buffIconUrl(spec.selfRezSpell)}" alt="" width="14" height="14" loading="lazy" />Self Rez</span>`
       : '';
   const brings = bringsFor(spec)
-    .map(
-      ({ id, name }) =>
-        `<li><img src="${buffIconUrl(id)}" alt="" width="18" height="18" loading="lazy" /><span>${escapeHtml(name)}</span></li>`,
-    )
+    .map(({ id, name }) => {
+      const inner = `<img src="${buffIconUrl(id)}" alt="" width="18" height="18" loading="lazy" /><span>${escapeHtml(name)}</span>`;
+      const spellId = buffCatalog[id]?.spellId;
+      const content = spellId
+        ? `<a class="brings-link" href="https://www.wowhead.com/spell=${spellId}" data-wowhead="spell=${spellId}" target="_blank" rel="noopener noreferrer">${inner}</a>`
+        : inner;
+      return `<li>${content}</li>`;
+    })
     .join('');
   return `
     <article class="player-card role-${spec.role.toLowerCase()}" style="--class-color: ${classColor}; --stagger: ${index * 90}ms">
@@ -389,9 +397,25 @@ function applyUrlState(): number | undefined {
   }
 
   syncDpsSliders();
+  // Checkbox state was set directly above (no change event fires), so mirror
+  // the spec-list visibility here too.
+  specListEl.hidden = !limitSpecsInput.checked;
+  specActionsEl.hidden = !limitSpecsInput.checked;
 
   const rawSeed = Number(params.get('seed'));
   return Number.isInteger(rawSeed) && rawSeed > 0 ? rawSeed : undefined;
+}
+
+function clearResults(): void {
+  cardsEl.innerHTML = '';
+  resultsSection.hidden = true;
+}
+
+function setSummary(messages: string[], warning = false): void {
+  summaryEl.classList.toggle('warning', warning);
+  summaryEl.innerHTML = messages
+    .map((m) => `<span class="summary-line">${escapeHtml(m)}</span>`)
+    .join('');
 }
 
 function generate(seedOverride?: number): void {
@@ -408,24 +432,60 @@ function generate(seedOverride?: number): void {
     if (spec) pool.push(spec);
   }
   if (pool.length === 0) {
-    summaryEl.textContent = 'No specializations selected.';
+    setSummary(['No specializations selected.']);
+    clearResults();
     return;
   }
 
   const seed = seedOverride ?? Math.floor(Math.random() * 0x7fffffff);
   const names = [...playersList.querySelectorAll<HTMLInputElement>('.player-name')].map((el) => el.value);
+
+  // Soften rules that the selected pool makes impossible, and say so. Pinned
+  // players do not draw from the pool, so they lower how many specs are needed.
+  const opts = optionsFromUi();
+  const warnings: string[] = [];
+  const drawsNeeded = 5 - pins.filter(Boolean).length;
+
+  if (opts.mustIncludeBloodlust && !pool.some((s) => s.bloodlust)) {
+    opts.mustIncludeBloodlust = false;
+    warnings.push(
+      "“Must include bloodlust” was ignored: none of your selected specializations provide bloodlust.",
+    );
+  }
+  if (opts.mustIncludeBattleRez && !pool.some((s) => s.battleRez)) {
+    opts.mustIncludeBattleRez = false;
+    warnings.push(
+      "“Must have battle rez” was ignored: none of your selected specializations can resurrect allies.",
+    );
+  }
+  if (opts.noDuplicates && pool.length < drawsNeeded) {
+    opts.noDuplicates = false;
+    warnings.push(
+      `“No duplicate specializations” was ignored: you selected only ${pool.length} specialization${pool.length === 1 ? '' : 's'}, but ${drawsNeeded} are needed.`,
+    );
+  }
+  if (opts.noDuplicateClasses && new Set(pool.map((s) => s.class)).size < drawsNeeded) {
+    opts.noDuplicateClasses = false;
+    warnings.push(
+      `“No duplicate classes” was ignored: you selected fewer than ${drawsNeeded} distinct classes.`,
+    );
+  }
+
   let assignments: Assignment[];
   try {
-    assignments = assignGroup(pool, names, optionsFromUi(), mulberry32(seed));
+    assignments = assignGroup(pool, names, opts, mulberry32(seed));
   } catch (err) {
-    summaryEl.textContent =
-      err instanceof Error ? err.message : 'Something went wrong while forging the group.';
+    setSummary([err instanceof Error ? err.message : 'Something went wrong while forging the group.']);
+    clearResults();
     return;
   }
 
   cardsEl.innerHTML = assignments.map((a, i) => renderCard(a, i, pins[i] !== null)).join('');
+  // Ask Wowhead's tooltip widget to scan the freshly injected links (harmless
+  // no-op if the widget script has not loaded, e.g. offline).
+  (window as unknown as { $WowheadPower?: { refreshLinks?: () => void } }).$WowheadPower?.refreshLinks?.();
   resultsSection.hidden = false;
-  summaryEl.textContent = '';
+  setSummary(warnings, true);
   activeSeed = seed;
   writeParams();
 
@@ -465,7 +525,7 @@ async function init(): Promise<void> {
     buffCatalog = data.buffs ?? {};
   } catch (err) {
     console.error(err);
-    summaryEl.textContent = 'Failed to load specs.json — is the dev server running?';
+    setSummary(['Failed to load specs.json — is the dev server running?']);
     resultsSection.hidden = false;
   }
 
@@ -493,8 +553,19 @@ async function init(): Promise<void> {
 
   limitSpecsInput.addEventListener('change', () => {
     specListEl.hidden = !limitSpecsInput.checked;
+    specActionsEl.hidden = !limitSpecsInput.checked;
     writeParams();
   });
+
+  for (const [button, checked] of [
+    [specAllButton, true],
+    [specNoneButton, false],
+  ] as const) {
+    button.addEventListener('click', () => {
+      for (const box of specListEl.querySelectorAll<HTMLInputElement>('input')) box.checked = checked;
+      writeParams();
+    });
+  }
   specListEl.addEventListener('change', () => writeParams());
 
   for (const input of [
@@ -521,6 +592,14 @@ async function init(): Promise<void> {
   buildSpecList();
   buildOtpSelects();
   syncDpsSliders();
+
+  // Touch devices: a tap emulates hover (Wowhead's widget then shows the
+  // tooltip), so swallow the click to avoid navigating away mid-inspection.
+  if (window.matchMedia('(hover: none)').matches) {
+    cardsEl.addEventListener('click', (e) => {
+      if ((e.target as HTMLElement).closest('a.brings-link')) e.preventDefault();
+    });
+  }
 
   // Restore a shared link (rules, names, limits) after the DOM is built; a
   // seed in the URL replays the exact same generated group.

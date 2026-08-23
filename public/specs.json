@@ -577,83 +577,103 @@
   "buffs": {
     "bloodlust": {
       "name": "Bloodlust",
-      "blizzIcon": "spell_nature_bloodlust"
+      "blizzIcon": "spell_nature_bloodlust",
+      "spellId": 2825
     },
     "chaos-brand": {
       "name": "Chaos Brand",
-      "blizzIcon": "ability_demonhunter_empowerwards"
+      "blizzIcon": "ability_demonhunter_empowerwards",
+      "spellId": 255260
     },
     "mark-of-the-wild": {
       "name": "Mark of the Wild",
-      "blizzIcon": "spell_nature_regeneration"
+      "blizzIcon": "spell_nature_regeneration",
+      "spellId": 1126
     },
     "blessing-of-the-bronze": {
       "name": "Blessing of the Bronze",
-      "blizzIcon": "ability_evoker_blessingofthebronze"
+      "blizzIcon": "ability_evoker_blessingofthebronze",
+      "spellId": 364342
     },
     "hunters-mark": {
       "name": "Hunter's Mark",
-      "blizzIcon": "ability_hunter_markedfordeath"
+      "blizzIcon": "ability_hunter_markedfordeath",
+      "spellId": 257284
     },
     "arcane-intellect": {
       "name": "Arcane Intellect",
-      "blizzIcon": "spell_holy_magicalsentry"
+      "blizzIcon": "spell_holy_magicalsentry",
+      "spellId": 1459
     },
     "mystic-touch": {
       "name": "Mystic Touch",
-      "blizzIcon": "ability_monk_sparring"
+      "blizzIcon": "ability_monk_sparring",
+      "spellId": 8647
     },
     "devotion-aura": {
       "name": "Devotion Aura",
-      "blizzIcon": "spell_holy_devotionaura"
+      "blizzIcon": "spell_holy_devotionaura",
+      "spellId": 465
     },
     "power-word-fortitude": {
       "name": "Power Word: Fortitude",
-      "blizzIcon": "spell_holy_wordfortitude"
+      "blizzIcon": "spell_holy_wordfortitude",
+      "spellId": 21562
     },
     "atrophic-poison": {
       "name": "Atrophic Poison",
-      "blizzIcon": "ability_rogue_nervesofsteel"
+      "blizzIcon": "ability_rogue_nervesofsteel",
+      "spellId": 381637
     },
     "skyfury": {
       "name": "Skyfury",
-      "blizzIcon": "spell_fire_totemofwrath"
+      "blizzIcon": "spell_fire_totemofwrath",
+      "spellId": 462854
     },
     "battle-shout": {
       "name": "Battle Shout",
-      "blizzIcon": "ability_warrior_battleshout"
+      "blizzIcon": "ability_warrior_battleshout",
+      "spellId": 6673
     },
     "death-grip": {
       "name": "Death Grip",
-      "blizzIcon": "spell_deathknight_strangulate"
+      "blizzIcon": "spell_deathknight_strangulate",
+      "spellId": 49576
     },
     "demonic-gateway": {
       "name": "Demonic Gateway",
-      "blizzIcon": "spell_warlock_demonicportal_green"
+      "blizzIcon": "spell_warlock_demonicportal_green",
+      "spellId": 111771
     },
     "soulstone": {
       "name": "Soulstone",
-      "blizzIcon": "spell_shadow_soulgem"
+      "blizzIcon": "spell_shadow_soulgem",
+      "spellId": 20707
     },
     "time-warp": {
       "name": "Time Warp",
-      "blizzIcon": "ability_mage_timewarp"
+      "blizzIcon": "ability_mage_timewarp",
+      "spellId": 80353
     },
     "fury-of-the-aspects": {
       "name": "Fury of the Aspects",
-      "blizzIcon": "ability_evoker_furyoftheaspects"
+      "blizzIcon": "ability_evoker_furyoftheaspects",
+      "spellId": 390386
     },
     "primal-rage": {
       "name": "Primal Rage",
-      "blizzIcon": "spell_shadow_unholyfrenzy"
+      "blizzIcon": "spell_shadow_unholyfrenzy",
+      "spellId": 264667
     },
     "rebirth": {
       "name": "Rebirth",
-      "blizzIcon": "spell_nature_reincarnation"
+      "blizzIcon": "spell_nature_reincarnation",
+      "spellId": 20484
     },
     "raise-ally": {
       "name": "Raise Ally",
-      "blizzIcon": "spell_shadow_deadofnight"
+      "blizzIcon": "spell_shadow_deadofnight",
+      "spellId": 61999
     },
     "battle-rez": {
       "name": "Battle Rez",
@@ -661,7 +681,8 @@
     },
     "reincarnation": {
       "name": "Reincarnation",
-      "blizzIcon": "spell_shaman_improvedreincarnation"
+      "blizzIcon": "spell_shaman_improvedreincarnation",
+      "spellId": 225080
     }
   }
 }
