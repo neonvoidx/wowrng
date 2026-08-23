@@ -13,6 +13,7 @@ Built with TypeScript + Vite. Static output, hosted on GitHub Pages.
   - **No duplicate specializations** (on by default) — no two players get the same class/spec
   - **No duplicate classes** (off by default) — every player gets a different class
   - **Must include bloodlust** (on by default) — at least one player draws a lust-capable spec
+  - **Only 1 bloodlust** (off by default) — force exactly one bloodlust-capable spec in the group
   - **Set melee / ranged DPS amount** (off by default) — require at least N melee
     or ranged DPS via slider (0–3). With both active, each slider is capped by the
     other's remaining budget so the combined total never exceeds 3.

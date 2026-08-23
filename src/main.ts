@@ -32,6 +32,7 @@ const playersList = document.querySelector<HTMLUListElement>('#players')!;
 const noDupesInput = document.querySelector<HTMLInputElement>('#opt-no-dupes')!;
 const noDupeClassesInput = document.querySelector<HTMLInputElement>('#opt-no-dupe-classes')!;
 const mustLustInput = document.querySelector<HTMLInputElement>('#opt-must-lust')!;
+const onlyOneLustInput = document.querySelector<HTMLInputElement>('#opt-only-one-lust')!;
 const setMeleeInput = document.querySelector<HTMLInputElement>('#opt-set-melee')!;
 const rangeMeleeInput = document.querySelector<HTMLInputElement>('#range-melee')!;
 const outMeleeEl = document.querySelector<HTMLOutputElement>('#out-melee')!;
@@ -90,6 +91,7 @@ function generate(): void {
       noDuplicates: noDupesInput.checked,
       noDuplicateClasses: noDupeClassesInput.checked,
       mustIncludeBloodlust: mustLustInput.checked,
+      onlyOneBloodlust: onlyOneLustInput.checked,
       meleeCount: setMeleeInput.checked ? Number(rangeMeleeInput.value) : null,
       rangedCount: setRangedInput.checked ? Number(rangeRangedInput.value) : null,
     });

@@ -20,6 +20,8 @@ export interface Options {
   noDuplicates: boolean;
   noDuplicateClasses: boolean;
   mustIncludeBloodlust: boolean;
+  /** Force exactly one bloodlust-capable spec in the group. */
+  onlyOneBloodlust: boolean;
   /** Minimum melee DPS count, or null to leave unconstrained. */
   meleeCount: number | null;
   /** Minimum ranged DPS count, or null to leave unconstrained. */
@@ -124,7 +126,26 @@ export function assignGroup(
     spec: drawForRole(role),
   }));
 
-  if (options.mustIncludeBloodlust && !assignments.some((a) => a.spec.bloodlust)) {
+  const lustCount = () => assignments.filter((a) => a.spec.bloodlust).length;
+
+  // Demote extra lusters so exactly one remains.
+  if (options.onlyOneBloodlust && lustCount() > 1) {
+    const extras = shuffle(assignments.filter((a) => a.spec.bloodlust), rng).slice(1);
+    for (const target of extras) {
+      usedSpecs.delete(key(target.spec));
+      usedClasses.delete(target.spec.class);
+      const pool = candidates(target.role, false, target).filter((s) => !s.bloodlust);
+      if (pool.length === 0) {
+        reserve(target.spec); // stuck; try the next extra instead
+        continue;
+      }
+      target.spec = pick(pool, rng);
+      reserve(target.spec);
+    }
+    if (lustCount() > 1) throw new Error('Could not reduce the group to a single bloodlust');
+  }
+
+  if ((options.mustIncludeBloodlust || options.onlyOneBloodlust) && lustCount() === 0) {
     const swappable = assignments.filter(
       (a) => candidates(a.role, true, a).length > 0,
     );
