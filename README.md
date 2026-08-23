@@ -7,13 +7,33 @@ Built with TypeScript + Vite. Static output, hosted on GitHub Pages.
 ## Features
 
 - Enter up to 5 player names (blank names become "Player N")
+- **One trick pony** (off by default): tick OTP next to a player and pick their
+  spec — that player is always assigned it, overriding "Limit specializations"
+  for them. Composition relaxes if pins overfill a role (extra tanks steal DPS
+  slots), and rules are still followed everywhere else they apply; unsatisfiable
+  ones degrade gracefully instead of erroring
 - Every group gets exactly 1 Tank, 1 Healer, 3 DPS, assigned to random players
 - Spec icons + official class colors on every result card
+- **Shareable links**: rules, player names, spec limits and the last generated
+  group are mirrored into the URL query string as you change them; opening such
+  a link restores everything and replays the exact same group (seeded PRNG).
+  Changing any control afterwards drops the stale seed until you regenerate.
+- Each card lists what that player **brings** (with icons): their exact bloodlust
+  spell (Time Warp for mages, Fury of the Aspects for evokers, Primal Rage for
+  hunters, Bloodlust for shamans), their exact battle rez (Rebirth for druids,
+  Raise Ally for death knights), their class raid buff (per Midnight 12.x —
+  Chaos Brand, Arcane Intellect, Hunter's Mark, Skyfury, …), and notable utility
+  (Death Grip; Demonic Gateway + Soulstone for the buff-less classes)
 - Toggleable rules:
   - **No duplicate specializations** (on by default) — no two players get the same class/spec
   - **No duplicate classes** (off by default) — every player gets a different class
   - **Must include bloodlust** (on by default) — at least one player draws a lust-capable spec
-  - **Only 1 bloodlust** (off by default) — force exactly one bloodlust-capable spec in the group
+  - **Limit to 1 augmentation evoker at most** (on by default) — reroll extra Augmentation
+    evokers; never forces one into the group
+  - **Must have battle rez** (on by default) — at least one Death Knight or Druid spec,
+    the only classes that can resurrect allies in combat
+  - **Limit specializations** (off by default) — pick which specs may appear; unticked
+    specs are excluded from generation
   - **Set melee / ranged DPS amount** (off by default) — require at least N melee
     or ranged DPS via slider (0–3). With both active, each slider is capped by the
     other's remaining budget so the combined total never exceeds 3.

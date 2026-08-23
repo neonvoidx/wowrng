@@ -11,13 +11,18 @@ const iconsDir = fileURLToPath(new URL('../public/icons/', import.meta.url));
 
 await mkdir(iconsDir, { recursive: true });
 
-const { specializations } = JSON.parse(await readFile(specsFile, 'utf8'));
+const { specializations, buffs } = JSON.parse(await readFile(specsFile, 'utf8'));
 
 let ok = 0;
 const failed = [];
 
-for (const spec of specializations) {
-  const outPath = path.join(iconsDir, `${spec.icon}.jpg`);
+const targets = [
+  ...specializations.map((spec) => ({ out: `${spec.icon}.jpg`, blizzIcon: spec.blizzIcon, label: `${spec.class} ${spec.name}` })),
+  ...Object.entries(buffs ?? {}).map(([id, buff]) => ({ out: `buff-${id}.jpg`, blizzIcon: buff.blizzIcon, label: buff.name })),
+];
+
+for (const target of targets) {
+  const outPath = path.join(iconsDir, target.out);
 
   if (!FORCE) {
     try {
@@ -33,12 +38,12 @@ for (const spec of specializations) {
 
   let done = false;
   for (const size of SIZES) {
-    const url = `${CDN}/${size}/${spec.blizzIcon}.jpg`;
+    const url = `${CDN}/${size}/${target.blizzIcon}.jpg`;
     try {
       const res = await fetch(url);
       if (!res.ok || !res.headers.get('content-type')?.includes('image')) continue;
       await writeFile(outPath, Buffer.from(await res.arrayBuffer()));
-      console.log(`ok   ${size}px  ${spec.icon}  <- ${spec.blizzIcon}`);
+      console.log(`ok   ${size}px  ${target.out}  <- ${target.blizzIcon}`);
       done = true;
       break;
     } catch (err) {
@@ -46,9 +51,9 @@ for (const spec of specializations) {
     }
   }
   if (done) ok++;
-  else failed.push(spec);
+  else failed.push(target);
 }
 
-console.log(`\n${ok}/${specializations.length} icons ready.`);
-for (const f of failed) console.error(`FAIL ${f.class} ${f.name} (${f.blizzIcon})`);
+console.log(`\n${ok}/${targets.length} icons ready.`);
+for (const f of failed) console.error(`FAIL ${f.label} (${f.blizzIcon})`);
 process.exitCode = failed.length ? 1 : 0;
