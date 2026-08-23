@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Randomly assign World of Warcraft specializations to your five-player group: one tank, one healer, three DPS."
+    />
+    <title>WoW M+ Comp Generator</title>
+  </head>
+  <body>
+    <div class="page">
+      <header>
+        <h1>WoW M+ Comp Generator</h1>
+        <p class="tagline">Generate a random M+ group. Yolo</p>
+      </header>
+
+      <main>
+        <form id="setup">
+          <section class="panel players-panel">
+            <h2>Players</h2>
+            <p class="hint">Names are optional &mdash; leave blank to stay anonymous.</p>
+            <ol id="players">
+              <li><input type="text" maxlength="24" placeholder="Player 1" autocomplete="off" /></li>
+              <li><input type="text" maxlength="24" placeholder="Player 2" autocomplete="off" /></li>
+              <li><input type="text" maxlength="24" placeholder="Player 3" autocomplete="off" /></li>
+              <li><input type="text" maxlength="24" placeholder="Player 4" autocomplete="off" /></li>
+              <li><input type="text" maxlength="24" placeholder="Player 5" autocomplete="off" /></li>
+            </ol>
+          </section>
+
+          <section class="panel options-panel">
+            <h2>Rules</h2>
+            <label class="option">
+              <input type="checkbox" id="opt-no-dupes" checked />
+              <span>No duplicate specializations</span>
+            </label>
+            <label class="option">
+              <input type="checkbox" id="opt-no-dupe-classes" checked />
+              <span>No duplicate classes</span>
+            </label>
+            <label class="option">
+              <input type="checkbox" id="opt-must-lust" checked />
+              <span>Must include bloodlust</span>
+            </label>
+
+            <div class="constraint">
+              <label class="option">
+                <input type="checkbox" id="opt-set-melee" />
+                <span>Set melee DPS amount</span>
+              </label>
+              <div class="slider-row" id="row-melee" hidden>
+                <input type="range" id="range-melee" min="0" max="3" step="1" value="1" />
+                <output id="out-melee">1</output>
+              </div>
+            </div>
+
+            <div class="constraint">
+              <label class="option">
+                <input type="checkbox" id="opt-set-ranged" />
+                <span>Set ranged DPS amount</span>
+              </label>
+              <div class="slider-row" id="row-ranged" hidden>
+                <input type="range" id="range-ranged" min="0" max="3" step="1" value="1" />
+                <output id="out-ranged">1</output>
+              </div>
+            </div>
+
+            <p class="hint">Every group always gets one Tank, one Healer and three DPS.</p>
+            <button type="submit" id="generate">Forge Group</button>
+          </section>
+        </form>
+
+        <section id="results" hidden>
+          <h2>Your Group</h2>
+          <p id="summary" class="summary"></p>
+          <div id="cards" class="card-grid"></div>
+        </section>
+      </main>
+
+      <footer>
+        <p>Retail specializations (Midnight era) &middot; Icons &copy; Blizzard Entertainment</p>
+      </footer>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

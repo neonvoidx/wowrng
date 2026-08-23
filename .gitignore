@@ -8,3 +8,10 @@ devenv.local.yaml
 
 # pre-commit
 .pre-commit-config.yaml
+
+# Node / build
+node_modules/
+dist/
+*.local
+/dist
+/node_modules

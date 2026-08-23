@@ -1,0 +1,57 @@
+{
+  "$comment": "Retail World of Warcraft specializations (Midnight era, patch 12.x). bloodlust: true if the spec can provide a Bloodlust/Heroism/Time Warp/Fury of the Aspects/Primal Rage effect. subrole: Melee/Ranged, only for DPS specs. icon: local file in /icons; blizzIcon: original Blizzard icon filename.",
+  "specializations": [
+    { "class": "Death Knight", "name": "Blood",        "role": "Tank",   "bloodlust": false, "icon": "deathknight-blood",       "blizzIcon": "spell_deathknight_bloodpresence" },
+    { "class": "Death Knight", "name": "Frost",        "role": "DPS",    "bloodlust": false, "subrole": "Melee",  "icon": "deathknight-frost",       "blizzIcon": "spell_deathknight_frostpresence" },
+    { "class": "Death Knight", "name": "Unholy",       "role": "DPS",    "bloodlust": false, "subrole": "Melee",  "icon": "deathknight-unholy",      "blizzIcon": "spell_deathknight_unholypresence" },
+
+    { "class": "Demon Hunter", "name": "Havoc",        "role": "DPS",    "bloodlust": false, "subrole": "Melee",  "icon": "demonhunter-havoc",       "blizzIcon": "ability_demonhunter_specdps" },
+    { "class": "Demon Hunter", "name": "Vengeance",    "role": "Tank",   "bloodlust": false, "icon": "demonhunter-vengeance",   "blizzIcon": "ability_demonhunter_spectank" },
+    { "class": "Demon Hunter", "name": "Devourer",     "role": "DPS",    "bloodlust": false, "subrole": "Ranged", "icon": "demonhunter-devourer",    "blizzIcon": "classicon_demonhunter_void" },
+
+    { "class": "Druid",        "name": "Balance",      "role": "DPS",    "bloodlust": false, "subrole": "Ranged", "icon": "druid-balance",           "blizzIcon": "spell_nature_starfall" },
+    { "class": "Druid",        "name": "Feral",        "role": "DPS",    "bloodlust": false, "subrole": "Melee",  "icon": "druid-feral",             "blizzIcon": "ability_druid_catform" },
+    { "class": "Druid",        "name": "Guardian",     "role": "Tank",   "bloodlust": false, "icon": "druid-guardian",          "blizzIcon": "ability_racial_bearform" },
+    { "class": "Druid",        "name": "Restoration",  "role": "Healer", "bloodlust": false, "icon": "druid-restoration",       "blizzIcon": "spell_nature_healingtouch" },
+
+    { "class": "Evoker",       "name": "Augmentation", "role": "DPS",    "bloodlust": true,  "subrole": "Ranged", "icon": "evoker-augmentation",     "blizzIcon": "classicon_evoker_augmentation" },
+    { "class": "Evoker",       "name": "Devastation",  "role": "DPS",    "bloodlust": true,  "subrole": "Ranged", "icon": "evoker-devastation",      "blizzIcon": "classicon_evoker_devastation" },
+    { "class": "Evoker",       "name": "Preservation", "role": "Healer", "bloodlust": true,  "icon": "evoker-preservation",     "blizzIcon": "classicon_evoker_preservation" },
+
+    { "class": "Hunter",       "name": "Beast Mastery","role": "DPS",    "bloodlust": true,  "subrole": "Ranged", "icon": "hunter-beastmastery",     "blizzIcon": "ability_hunter_bestialdiscipline" },
+    { "class": "Hunter",       "name": "Marksmanship", "role": "DPS",    "bloodlust": true,  "subrole": "Ranged", "icon": "hunter-marksmanship",     "blizzIcon": "ability_hunter_focusedaim" },
+    { "class": "Hunter",       "name": "Survival",     "role": "DPS",    "bloodlust": true,  "subrole": "Melee",  "icon": "hunter-survival",         "blizzIcon": "ability_hunter_camouflage" },
+
+    { "class": "Mage",         "name": "Arcane",       "role": "DPS",    "bloodlust": true,  "subrole": "Ranged", "icon": "mage-arcane",             "blizzIcon": "spell_holy_magicalsentry" },
+    { "class": "Mage",         "name": "Fire",         "role": "DPS",    "bloodlust": true,  "subrole": "Ranged", "icon": "mage-fire",               "blizzIcon": "spell_fire_firebolt02" },
+    { "class": "Mage",         "name": "Frost",        "role": "DPS",    "bloodlust": true,  "subrole": "Ranged", "icon": "mage-frost",              "blizzIcon": "spell_frost_frostbolt02" },
+
+    { "class": "Monk",         "name": "Brewmaster",   "role": "Tank",   "bloodlust": false, "icon": "monk-brewmaster",         "blizzIcon": "spell_monk_brewmaster_spec" },
+    { "class": "Monk",         "name": "Mistweaver",   "role": "Healer", "bloodlust": false, "icon": "monk-mistweaver",         "blizzIcon": "spell_monk_mistweaver_spec" },
+    { "class": "Monk",         "name": "Windwalker",   "role": "DPS",    "bloodlust": false, "subrole": "Melee",  "icon": "monk-windwalker",         "blizzIcon": "spell_monk_windwalker_spec" },
+
+    { "class": "Paladin",      "name": "Holy",         "role": "Healer", "bloodlust": false, "icon": "paladin-holy",            "blizzIcon": "spell_holy_holybolt" },
+    { "class": "Paladin",      "name": "Protection",   "role": "Tank",   "bloodlust": false, "icon": "paladin-protection",      "blizzIcon": "ability_paladin_shieldofthetemplar" },
+    { "class": "Paladin",      "name": "Retribution",  "role": "DPS",    "bloodlust": false, "subrole": "Melee",  "icon": "paladin-retribution",     "blizzIcon": "spell_holy_auraoflight" },
+
+    { "class": "Priest",       "name": "Discipline",   "role": "Healer", "bloodlust": false, "icon": "priest-discipline",       "blizzIcon": "spell_holy_powerwordshield" },
+    { "class": "Priest",       "name": "Holy",         "role": "Healer", "bloodlust": false, "icon": "priest-holy",             "blizzIcon": "spell_holy_guardianspirit" },
+    { "class": "Priest",       "name": "Shadow",       "role": "DPS",    "bloodlust": false, "subrole": "Ranged", "icon": "priest-shadow",           "blizzIcon": "spell_shadow_shadowwordpain" },
+
+    { "class": "Rogue",        "name": "Assassination","role": "DPS",    "bloodlust": false, "subrole": "Melee",  "icon": "rogue-assassination",     "blizzIcon": "ability_rogue_deadlybrew" },
+    { "class": "Rogue",        "name": "Outlaw",       "role": "DPS",    "bloodlust": false, "subrole": "Melee",  "icon": "rogue-outlaw",            "blizzIcon": "inv_sword_30" },
+    { "class": "Rogue",        "name": "Subtlety",     "role": "DPS",    "bloodlust": false, "subrole": "Melee",  "icon": "rogue-subtlety",          "blizzIcon": "ability_stealth" },
+
+    { "class": "Shaman",       "name": "Elemental",    "role": "DPS",    "bloodlust": true,  "subrole": "Ranged", "icon": "shaman-elemental",        "blizzIcon": "spell_nature_lightning" },
+    { "class": "Shaman",       "name": "Enhancement",  "role": "DPS",    "bloodlust": true,  "subrole": "Melee",  "icon": "shaman-enhancement",      "blizzIcon": "spell_shaman_improvedstormstrike" },
+    { "class": "Shaman",       "name": "Restoration",  "role": "Healer", "bloodlust": true,  "icon": "shaman-restoration",      "blizzIcon": "spell_nature_magicimmunity" },
+
+    { "class": "Warlock",      "name": "Affliction",   "role": "DPS",    "bloodlust": false, "subrole": "Ranged", "icon": "warlock-affliction",      "blizzIcon": "spell_shadow_deathcoil" },
+    { "class": "Warlock",      "name": "Demonology",   "role": "DPS",    "bloodlust": false, "subrole": "Ranged", "icon": "warlock-demonology",      "blizzIcon": "spell_shadow_metamorphosis" },
+    { "class": "Warlock",      "name": "Destruction",  "role": "DPS",    "bloodlust": false, "subrole": "Ranged", "icon": "warlock-destruction",     "blizzIcon": "spell_shadow_rainoffire" },
+
+    { "class": "Warrior",      "name": "Arms",         "role": "DPS",    "bloodlust": false, "subrole": "Melee",  "icon": "warrior-arms",            "blizzIcon": "ability_warrior_savageblow" },
+    { "class": "Warrior",      "name": "Fury",         "role": "DPS",    "bloodlust": false, "subrole": "Melee",  "icon": "warrior-fury",            "blizzIcon": "ability_warrior_innerrage" },
+    { "class": "Warrior",      "name": "Protection",   "role": "Tank",   "bloodlust": false, "icon": "warrior-protection",      "blizzIcon": "ability_warrior_defensivestance" }
+  ]
+}
