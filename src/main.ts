@@ -442,33 +442,37 @@ function generate(seedOverride?: number): void {
 
   // Soften rules that the selected pool makes impossible, and say so. Pinned
   // players do not draw from the pool, so they lower how many specs are needed.
+  // Only relevant when "Limit specializations" is active — with the full catalog
+  // every rule is satisfiable.
   const opts = optionsFromUi();
   const warnings: string[] = [];
   const drawsNeeded = 5 - pins.filter(Boolean).length;
 
-  if (opts.mustIncludeBloodlust && !pool.some((s) => s.bloodlust)) {
-    opts.mustIncludeBloodlust = false;
-    warnings.push(
-      "“Must include bloodlust” was ignored: none of your selected specializations provide bloodlust.",
-    );
-  }
-  if (opts.mustIncludeBattleRez && !pool.some((s) => s.battleRez)) {
-    opts.mustIncludeBattleRez = false;
-    warnings.push(
-      "“Must have battle rez” was ignored: none of your selected specializations can resurrect allies.",
-    );
-  }
-  if (opts.noDuplicates && pool.length < drawsNeeded) {
-    opts.noDuplicates = false;
-    warnings.push(
-      `“No duplicate specializations” was ignored: you selected only ${pool.length} specialization${pool.length === 1 ? '' : 's'}, but ${drawsNeeded} are needed.`,
-    );
-  }
-  if (opts.noDuplicateClasses && new Set(pool.map((s) => s.class)).size < drawsNeeded) {
-    opts.noDuplicateClasses = false;
-    warnings.push(
-      `“No duplicate classes” was ignored: you selected fewer than ${drawsNeeded} distinct classes.`,
-    );
+  if (limitSpecsInput.checked) {
+    if (opts.mustIncludeBloodlust && !pool.some((s) => s.bloodlust)) {
+      opts.mustIncludeBloodlust = false;
+      warnings.push(
+        "“Must include bloodlust” was ignored: none of your selected specializations provide bloodlust.",
+      );
+    }
+    if (opts.mustIncludeBattleRez && !pool.some((s) => s.battleRez)) {
+      opts.mustIncludeBattleRez = false;
+      warnings.push(
+        "“Must have battle rez” was ignored: none of your selected specializations can resurrect allies.",
+      );
+    }
+    if (opts.noDuplicates && pool.length < drawsNeeded) {
+      opts.noDuplicates = false;
+      warnings.push(
+        `“No duplicate specializations” was ignored: you selected only ${pool.length} specialization${pool.length === 1 ? '' : 's'}, but ${drawsNeeded} are needed.`,
+      );
+    }
+    if (opts.noDuplicateClasses && new Set(pool.map((s) => s.class)).size < drawsNeeded) {
+      opts.noDuplicateClasses = false;
+      warnings.push(
+        `“No duplicate classes” was ignored: you selected fewer than ${drawsNeeded} distinct classes.`,
+      );
+    }
   }
 
   let assignments: Assignment[];
