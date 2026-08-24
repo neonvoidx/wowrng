@@ -110,8 +110,51 @@ form {
   counter-increment: player;
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 0.6rem;
   min-width: 0;
+}
+
+/* Per-player spec exclusion block always takes its own full-width row. */
+.player-exclude {
+  flex: 1 1 100%;
+}
+
+/* Collapsible selection header; matches the small toggle-label style. */
+.player-exclude summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  cursor: pointer;
+  user-select: none;
+  list-style: none;
+}
+
+.player-exclude summary::-webkit-details-marker {
+  display: none;
+}
+
+.player-exclude summary::before {
+  content: '▸';
+  color: var(--accent);
+  transition: transform 0.15s ease;
+}
+
+.player-exclude[open] summary::before {
+  transform: rotate(90deg);
+}
+
+.player-exclude summary:hover {
+  color: var(--accent-bright);
+}
+
+.player-exclude .spec-actions {
+  margin-top: 0.45rem;
 }
 
 #players .player-name {
@@ -170,6 +213,16 @@ input[type='text']:focus {
   cursor: pointer;
 }
 
+/* Disabled side of the OTP/exclusion mutual exclusivity. */
+.otp input:disabled {
+  cursor: not-allowed;
+}
+
+.otp:has(input:disabled) {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
 .otp-select {
   flex: 0 1 auto;
   min-width: 0;
@@ -196,6 +249,10 @@ input[type='text']:focus {
     grid-column: 1 / -1;
     width: 100%;
     max-width: none;
+  }
+
+  #players .player-exclude {
+    grid-column: 1 / -1;
   }
 }
 
@@ -229,7 +286,8 @@ input[type='text']:focus {
   margin-top: 0.35rem;
 }
 
-#spec-list {
+#spec-list,
+.player-exclude-list {
   margin-top: 0.35rem;
   display: flex;
   flex-direction: column;
@@ -242,8 +300,14 @@ input[type='text']:focus {
   background: #0d0a17;
 }
 
-#spec-list[hidden] {
+#spec-list[hidden],
+.player-exclude-list[hidden] {
   display: none;
+}
+
+/* Five of these can stack on screen at once; keep each one compact. */
+.player-exclude-list {
+  max-height: 180px;
 }
 
 .spec-group-title {

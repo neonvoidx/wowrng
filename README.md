@@ -11,7 +11,12 @@ Built with TypeScript + Vite. Static output, hosted on GitHub Pages.
   spec — that player is always assigned it, overriding "Limit specializations"
   for them. Composition relaxes if pins overfill a role (extra tanks steal DPS
   slots), and rules are still followed everywhere else they apply; unsatisfiable
-  ones degrade gracefully instead of erroring
+  ones degrade gracefully instead of erroring. Mutually exclusive with the
+  per-player "Exclude certain specs" toggle below (checking either disables the other)
+- **Exclude certain specs** (off by default): tick next to a player and select
+  the specs they must never receive — even via rule swap-ins like bloodlust or
+  battle rez replacements. The selection opens in an expandable list (collapsible
+  afterwards) showing a live count; mirrored into shareable links
 - Every group gets exactly 1 Tank, 1 Healer, 3 DPS, assigned to random players
 - Spec icons + official class colors on every result card
 - **Shareable links**: rules, player names, spec limits and the last generated

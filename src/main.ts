@@ -50,6 +50,10 @@ const form = document.querySelector<HTMLFormElement>('#setup')!;
 const playersList = document.querySelector<HTMLUListElement | HTMLOListElement>('#players')!;
 const otpToggles = [...playersList.querySelectorAll<HTMLInputElement>('.otp-toggle')];
 const otpSelects = [...playersList.querySelectorAll<HTMLSelectElement>('.otp-select')];
+const excludeToggles = [...playersList.querySelectorAll<HTMLInputElement>('.exclude-toggle')];
+const excludeLists = [...playersList.querySelectorAll<HTMLDivElement>('.player-exclude-list')];
+const excludeDetails = [...playersList.querySelectorAll<HTMLDetailsElement>('.player-exclude')];
+const excludeCounts = [...playersList.querySelectorAll<HTMLSpanElement>('.exclude-count')];
 const noDupesInput = document.querySelector<HTMLInputElement>('#opt-no-dupes')!;
 const noDupeClassesInput = document.querySelector<HTMLInputElement>('#opt-no-dupe-classes')!;
 const mustLustInput = document.querySelector<HTMLInputElement>('#opt-must-lust')!;
@@ -165,8 +169,10 @@ function renderCard(assignment: Assignment, index: number, locked: boolean): str
 
 const specKey = (spec: Spec): string => `${spec.class}:${spec.name}`;
 
-function buildSpecList(): void {
-  specListEl.innerHTML = '';
+/** Grouped-by-class icon checkboxes; checked = allowed for the global limit
+ *  list, checked = excluded inside the per-player exclusion lists. */
+function buildSpecCheckboxes(container: HTMLElement, defaultChecked: boolean): void {
+  container.innerHTML = '';
 
   const byClass = new Map<string, Spec[]>();
   for (const spec of specs) {
@@ -195,7 +201,7 @@ function buildSpecList(): void {
 
       const checkbox = document.createElement('input');
       checkbox.type = 'checkbox';
-      checkbox.checked = true;
+      checkbox.checked = defaultChecked;
       checkbox.dataset.key = specKey(spec);
 
       const icon = document.createElement('img');
@@ -212,8 +218,15 @@ function buildSpecList(): void {
       items.append(label);
     }
     group.append(items);
-    specListEl.append(group);
+    container.append(group);
   }
+}
+
+function buildSpecLists(): void {
+  buildSpecCheckboxes(specListEl, true);
+  // Exclusion lists start with nothing ticked: no spec is excluded until the
+  // user says so.
+  for (const list of excludeLists) buildSpecCheckboxes(list, false);
 }
 
 function activeSpecs(): Spec[] {
@@ -236,6 +249,7 @@ function optionsFromUi(): Options {
     meleeCount: setMeleeInput.checked ? Number(rangeMeleeInput.value) : null,
     rangedCount: setRangedInput.checked ? Number(rangeRangedInput.value) : null,
     pins: pinsFromUi(),
+    exclusions: exclusionsFromUi(),
   };
 }
 
@@ -243,6 +257,25 @@ function optionsFromUi(): Options {
 function pinsFromUi(): (string | null)[] {
   return otpToggles.map((toggle, i) =>
     toggle.checked && otpSelects[i].value ? otpSelects[i].value : null,
+  );
+}
+
+/** Excluded spec keys per player; empty arrays when the toggle is off or
+ *  nothing is ticked. */
+function exclusionsFromUi(): string[][] {
+  return excludeToggles.map((toggle, i) =>
+    toggle.checked
+      ? [...excludeLists[i].querySelectorAll<HTMLInputElement>('input:checked')]
+          .map((el) => el.dataset.key ?? '')
+          .filter(Boolean)
+      : [],
+  );
+}
+
+/** Mirror how many specs are currently excluded into the disclosure header. */
+function syncExcludeCount(i: number): void {
+  excludeCounts[i].textContent = String(
+    excludeLists[i].querySelectorAll<HTMLInputElement>('input:checked').length,
   );
 }
 
@@ -330,6 +363,11 @@ function writeParams(): void {
   pinsFromUi().forEach((pin, i) => {
     if (pin) p.set(`t${i}`, pin);
   });
+  // Presence of x{i} alone marks the toggle as on; an empty value means the
+  // list is enabled but nothing is excluded yet.
+  exclusionsFromUi().forEach((keys, i) => {
+    if (excludeToggles[i].checked) p.set(`x${i}`, keys.join(','));
+  });
   if (activeSeed !== undefined) p.set('seed', String(activeSeed));
 
   const qs = p.toString();
@@ -396,11 +434,34 @@ function applyUrlState(): number | undefined {
     }
   }
 
+  // Per-player exclusion lists: x{i} present = toggle on; empty value means
+  // enabled with nothing ticked yet. The disclosure opens by default.
+  for (let i = 0; i < excludeToggles.length; i++) {
+    const raw = params.get(`x${i}`);
+    const on = raw !== null;
+    excludeToggles[i].checked = on;
+    excludeDetails[i].hidden = !on;
+    if (on) excludeDetails[i].open = true;
+    const excluded = on && raw.length > 0 ? new Set(raw.split(',')) : new Set<string>();
+    for (const box of excludeLists[i].querySelectorAll<HTMLInputElement>('input')) {
+      box.checked = excluded.has(box.dataset.key ?? '');
+    }
+    syncExcludeCount(i);
+  }
+
   syncDpsSliders();
   // Checkbox state was set directly above (no change event fires), so mirror
   // the spec-list visibility here too.
   specListEl.hidden = !limitSpecsInput.checked;
   specActionsEl.hidden = !limitSpecsInput.checked;
+  // Same for OTP vs exclusion mutual exclusivity: derive both directions from
+  // the final restored states.
+  otpToggles.forEach((toggle, i) => {
+    excludeToggles[i].disabled = toggle.checked;
+  });
+  excludeToggles.forEach((toggle, i) => {
+    otpToggles[i].disabled = toggle.checked;
+  });
 
   const rawSeed = Number(params.get('seed'));
   return Number.isInteger(rawSeed) && rawSeed > 0 ? rawSeed : undefined;
@@ -586,6 +647,15 @@ async function init(): Promise<void> {
   otpToggles.forEach((toggle, i) => {
     toggle.addEventListener('change', () => {
       otpSelects[i].hidden = !toggle.checked;
+      // OTP and per-player spec exclusion are mutually exclusive: turning OTP
+      // on resets and disables that player's exclusion control.
+      if (toggle.checked) {
+        excludeToggles[i].checked = false;
+        excludeToggles[i].disabled = true;
+        excludeDetails[i].hidden = true;
+      } else {
+        excludeToggles[i].disabled = false;
+      }
       writeParams();
     });
   });
@@ -593,7 +663,41 @@ async function init(): Promise<void> {
     select.addEventListener('change', () => writeParams());
   }
 
-  buildSpecList();
+  excludeToggles.forEach((toggle, i) => {
+    toggle.addEventListener('change', () => {
+      const details = excludeDetails[i];
+      details.hidden = !toggle.checked;
+      // The selection opens by default whenever exclusion is enabled; the
+      // summary row lets users collapse it again.
+      if (toggle.checked) {
+        details.open = true;
+        syncExcludeCount(i);
+      }
+      // ...and vice versa: an active exclusion list pins down the OTP toggle.
+      otpToggles[i].disabled = toggle.checked;
+      writeParams();
+    });
+  });
+  excludeDetails.forEach((details, i) => {
+    const list = excludeLists[i];
+    const [allButton, noneButton] = details.querySelectorAll<HTMLButtonElement>('.mini-btn');
+    for (const [button, checked] of [
+      [allButton, true],
+      [noneButton, false],
+    ] as const) {
+      button.addEventListener('click', () => {
+        for (const box of list.querySelectorAll<HTMLInputElement>('input')) box.checked = checked;
+        syncExcludeCount(i);
+        writeParams();
+      });
+    }
+    list.addEventListener('change', () => {
+      syncExcludeCount(i);
+      writeParams();
+    });
+  });
+
+  buildSpecLists();
   buildOtpSelects();
   syncDpsSliders();
 
